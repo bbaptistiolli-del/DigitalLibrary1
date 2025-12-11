@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login – Digital Library</title>
+
+  <style>
+    body {
+      background:#f1f5ff;
+      font-family: Poppins, sans-serif;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+    }
+
+    .login-box {
+      background:white;
+      padding:30px;
+      border-radius:10px;
+      box-shadow:0 4px 15px rgba(0,0,0,0.2);
+      width:320px;
+      text-align:center;
+    }
+
+    input {
+      width:100%;
+      padding:12px;
+      margin:10px 0;
+      border-radius:6px;
+      border:1px solid #ccc;
+    }
+
+    button {
+      width:100%;
+      padding:12px;
+      background:#2979ff;
+      color:white;
+      border:none;
+      border-radius:6px;
+      margin-top:10px;
+      font-size:16px;
+      cursor:pointer;
+    }
+
+    button:hover {
+      background:#005ace;
+    }
+
+    .google-btn {
+      background:#db4437;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-box">
+  <h2>Login</h2>
+  <p>Only @sacredheart.ie emails allowed</p>
+
+  <input type="email" id="email" placeholder="School Email">
+  <input type="password" id="password" placeholder="Password">
+
+  <button id="emailLoginBtn">Login with Email</button>
+
+  <button class="google-btn" id="googleLoginBtn">Login with Google</button>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signInWithEmailAndPassword
+  } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDO7VsuqCgnWN4vlFXNjExZZTbR4j0dVLw",
+    authDomain: "digitallibrary-7018d.firebaseapp.com",
+    projectId: "digitallibrary-7018d",
+    storageBucket: "digitallibrary-7018d.firebasestorage.app",
+    messagingSenderId: "64527292424",
+    appId: "1:64527292424:web:9f8a23b1c05bd55d59d9bd"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const allowedDomain = "sacredheart.ie";
+
+  function checkDomain(email) {
+    if (!email.endsWith("@sacredheart.ie")) {
+      alert("Only @sacredheart.ie emails allowed.");
+      return false;
+    }
+    return true;
+  }
+
+  // Google login
+  document.getElementById("googleLoginBtn").onclick = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then(res => {
+        if (checkDomain(res.user.email)) window.location.href = "index.html";
+      })
+      .catch(err => alert(err.message));
+  };
+
+  // Email login
+  document.getElementById("emailLoginBtn").onclick = () => {
+    const email = document.getElementById("email").value.trim();
+    const pw = document.getElementById("password").value;
+
+    signInWithEmailAndPassword(auth, email, pw)
+      .then(res => {
+        if (checkDomain(res.user.email)) window.location.href = "index.html";
+      })
+      .catch(err => alert(err.message));
+  };
+</script>
+
+</body>
+</html>
