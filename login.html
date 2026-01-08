@@ -23,12 +23,12 @@
   document.getElementById("googleBtn").onclick = googleLogin;
 
   document.getElementById("emailBtn").onclick = () => {
-    emailLogin(
-      document.getElementById("email").value.trim(),
-    
-    );
+    emailLogin(document.getElementById("email").value.trim());
   };
+    import { protectPage } from "./auth.js";
+  protectPage();
 </script>
+
 
 </body>
 </html>
