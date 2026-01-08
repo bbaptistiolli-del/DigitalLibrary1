@@ -2,35 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login – Digital Library</title>
+  <title>Digital Study Library</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="login-page">
+<body>
 
-<div class="login-box">
-  <h2>Login</h2>
-  <p>Only @sacredheart.ie emails allowed</p>
+<header>
+  <h1>📚 Digital Study Library</h1>
+  <p>Click a book to read instantly</p>
+</header>
 
-  <input type="email" id="email" placeholder="School Email">
+<nav>
+  <button onclick="openSection('library')">📘 Books</button>
+</nav>
 
-  <button id="emailBtn">Login with Email</button>
-  <button class="google-btn" id="googleBtn">Login with Google</button>
+<section id="library" class="page">
+  <div id="bookGrid" class="book-grid"></div>
+</section>
+
+<div id="pdfPopup" class="popup">
+  <div class="popup-header">
+    <button onclick="closePDF()">⬅ Back</button>
+    <a id="pdfDownload" download>Download</a>
+  </div>
+  <iframe id="pdfFrame"></iframe>
 </div>
 
-<script type="module">
-  import { googleLogin, emailLogin } from "./auth.js";
-
-  document.getElementById("googleBtn").onclick = googleLogin;
-
-  document.getElementById("emailBtn").onclick = () => {
-    emailLogin(document.getElementById("email").value.trim());
-  };
-    import { protectPage } from "./auth.js";
-  protectPage();
-</script>
-
-
+<script type="module" src="script.js"></script>
 </body>
 </html>
+
 
 
