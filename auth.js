@@ -1,42 +1,59 @@
-import { auth } from "./firebase.js";
 import {
-    GoogleAuthProvider,
-    signInWithPopup,
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+import { auth } from "./firebase.js";
 
 const allowedDomain = "sacredheart.ie";
 
-export function googleLogin() {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-        .then(result => checkDomain(result.user.email))
-        .catch(error => alert(error.message));
-}
-
-export function emailLogin() {
-    let email = document.getElementById("email").value.trim();
-    let password = document.getElementById("password").value;
-
-    signInWithEmailAndPassword(auth, email, password)
-        .then(result => checkDomain(result.user.email))
-        .catch(error => alert(error.message));
-}
-
 function checkDomain(email) {
-    let domain = email.split("@")[1];
-    if (domain !== allowedDomain) {
-        alert("Only @sacredheart.ie emails are allowed.");
+  return email.endsWith(`@${allowedDomain}`);
+}
+
+// Protect index.html
+export function protectPage() {
+  onAuthStateChanged(auth, user => {
+    if (!user) window.location.replace("login.html");
+  });
+}
+
+// Google login
+export function googleLogin() {
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(auth, provider)
+    .then(res => {
+      if (!checkDomain(res.user.email)) {
+        alert("Only @sacredheart.ie emails allowed");
         signOut(auth);
         return;
-    }
-    window.location.href = "index.html";
+      }
+      window.location.href = "index.html";
+    })
+    .catch(err => alert(err.message));
 }
 
-onAuthStateChanged(auth, user => {
-    if (!user && window.location.pathname.includes("index.html")) {
-        window.location.href = "login.html";
-    }
-});
+// Email login
+export function emailLogin(email, password) {
+  signInWithEmailAndPassword(auth, email, password)
+    .then(res => {
+      if (!checkDomain(res.user.email)) {
+        alert("Only @sacredheart.ie emails allowed");
+        signOut(auth);
+        return;
+      }
+      window.location.href = "index.html";
+    })
+    .catch(err => alert(err.message));
+}
+
+// Logout
+export function logout() {
+  signOut(auth).then(() => window.location.href = "login.html");
+}
+
+
+
