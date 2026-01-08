@@ -1,3 +1,4 @@
+// library.js
 import { protectPage, logout } from "./auth.js";
 
 protectPage();
